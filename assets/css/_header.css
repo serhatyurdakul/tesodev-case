@@ -1,0 +1,45 @@
+header {
+  margin-top: 64px;
+  margin-bottom: 73px;
+}
+
+header .btn {
+  display: block;
+  margin-left: auto;
+}
+
+.results-header-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.results-header-wrapper .logo {
+  margin-right: 35px;
+}
+
+.search-bar-results {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  margin-right: 100px;
+}
+
+.form-header-wrapper {
+  display: flex;
+  align-items: center;
+  column-gap: 40px;
+  margin-bottom: 65px;
+}
+
+.return-wrapper {
+  display: flex;
+  column-gap: 12px;
+}
+.return-wrapper p {
+  font-family: "Roboto", sans-serif;
+  font-size: 24px;
+  color: #484848;
+  font-weight: 700;
+}

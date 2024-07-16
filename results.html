@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <script defer src="./assets/js/db.js"></script>
+    <script defer src="./assets/js/results.js"></script>
+
+    <link rel="stylesheet" href="./assets/css/main.css" />
+    <title>Results</title>
+  </head>
+
+  <body>
+    <!--! header start  -->
+    <header class="results-header">
+      <div class="container">
+        <div class="results-header-wrapper">
+          <a href="./index.html">
+            <img src="./assets/icon/logo-sm.svg" alt="" class="logo"
+          /></a>
+          <div class="search-bar-results">
+            <input
+              type="text"
+              class="searchInput-resultspage search-input input input-sm"
+              autofocus
+            />
+            <button class="btn" onclick="searchbtnclick()">Search</button>
+          </div>
+          <a href="./form.html"
+            ><button class="btn btn-lg">Add new record</button></a
+          >
+        </div>
+      </div>
+    </header>
+    <!--! header end  -->
+
+    <!--! all-results start  -->
+    <section class="results">
+      <div class="container">
+        <div class="all-results-wrapper">
+          <ul class="results-list"></ul>
+
+          <!--! orderby select start -->
+          <div class="orderby-wrapper">
+            <button class="order-btn" onclick="show(self)">
+              <img src="./assets/icon/sort-icon.svg" alt="order button" />Order
+              By
+            </button>
+            <ul class="orderby-list" style="display: none">
+              <li class="orderby-item" onclick="setSortKey('name','asc',this)">
+                <a href="#">Name ascending</a>
+              </li>
+              <li class="orderby-item" onclick="setSortKey('name','desc',this)">
+                <a href="#">Name descending</a>
+              </li>
+              <li class="orderby-item" onclick="setSortKey('year','asc',this)">
+                <a href="#">Year ascending</a>
+              </li>
+              <li class="orderby-item" onclick="setSortKey('year','desc',this)">
+                <a href="#">Year descending</a>
+              </li>
+            </ul>
+          </div>
+          <!--! orderby button end -->
+        </div>
+
+        <!-- pag start -->
+        <div class="pagination-container"></div>
+        <!-- pag end -->
+      </div>
+    </section>
+
+    <!--! all results end  -->
+
+    <!--! footer start  -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-wrapper">
+          <div class="footer-adress">
+            <div class="footer-adress-wrapper">
+              <img src="./assets/img/Image-address.png" alt="address image" />
+              <div class="adress">
+                <strong>İletişim</strong>
+                <p class="adress-detail">
+                  Adres: Çifte Havuzlar Mah. Eski Londra Asfaltı Cad. Kuluçka
+                  Merkezi D2 Blok No: 151/1F İç Kapı No: 2B03 Esenler/İstanbul
+                </p>
+                <a href="mailto:bilgi@tesodev.com"
+                  ><strong>Email: bilgi@tesodev.com</strong>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="footer-map">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3010.279562401988!2d28.888373176902796!3d41.01913931875468!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14cabb7abf29ba35%3A0xc98f44e9057adcde!2zVGVzb2RldiBZYXrEsWzEsW0!5e0!3m2!1str!2str!4v1697552507046!5m2!1str!2str"
+              width="100%"
+              height="100%"
+              style="border: 0"
+              allowfullscreen=""
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+            ></iframe>
+          </div>
+        </div>
+      </div>
+    </footer>
+    <!--! footer end  -->
+  </body>
+</html>

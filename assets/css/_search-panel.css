@@ -1,0 +1,115 @@
+.search-panel {
+  min-height: 685px;
+}
+
+.search-panel .search-panel-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.logo {
+  width: max-content;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.search-panel .logo-sub-title {
+  font-family: "Roboto", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #484848;
+  margin-top: 12px;
+  margin-left: 270px;
+}
+
+.title-lg {
+  font-family: "Inter", sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 36px;
+  color: #090a0a;
+}
+
+.search-panel-wrapper .title-lg {
+  align-self: flex-start;
+  margin-left: 245px;
+  margin-bottom: 18px;
+}
+
+.search-bar {
+  position: relative;
+  margin-bottom: 17px;
+}
+
+.search-bar .search-icon {
+  position: absolute;
+  left: 12px;
+  top: 12px;
+}
+
+.search-bar input {
+  padding: 12px 12px 12px 48px;
+  border: 2px solid #484848;
+  color: #090a0a;
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+}
+
+.search-bar input:focus {
+  border-color: #204080;
+  background-color: #fff;
+}
+
+.search-bar .btn-searchbar {
+  position: absolute;
+  right: -150px;
+}
+
+.search-bar a {
+  display: contents;
+}
+
+.location-bold-text {
+  color: #090a0a;
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+}
+
+.location-light-text {
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 16px;
+  color: #72777a;
+}
+
+.show-more-button {
+  display: block;
+  text-align: center;
+  width: 100%;
+  padding: 15px 0px;
+  transition: 0.2s all ease;
+}
+.show-more-button:hover {
+  font-size: 20px;
+}
+
+.subheading {
+  color: #090a0a;
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 24px;
+}

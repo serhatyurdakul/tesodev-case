@@ -1,0 +1,39 @@
+.form-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 60px;
+}
+
+.form-wrapper .form-item {
+  display: flex;
+  flex-direction: column;
+  row-gap: 7px;
+  margin-bottom: 36px;
+}
+
+.form-wrapper .form-item label {
+  padding-left: 7px;
+  font-family: "Roboto", sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #686868;
+}
+
+.form form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.form form .btn {
+  align-self: flex-end;
+}
+
+button.btn:disabled {
+  background-color: gray;
+}
+
+.error {
+  border-color: #ff0000b3;
+}

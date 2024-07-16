@@ -1,0 +1,74 @@
+.btn {
+  width: 138px;
+  height: 46px;
+  font-family: "Roboto", sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  background-color: #204080;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+}
+
+.btn:hover {
+  background-color: #4f75c2;
+}
+
+.btn-lg {
+  width: 216px;
+}
+
+.input {
+  font-family: "Roboto", sans-serif;
+  font-size: 18px;
+  width: 509px;
+  height: 46px;
+  border-radius: 8px;
+  border: 1.5px solid #484848;
+  padding: 10px 17px;
+
+  flex-shrink: 0;
+}
+
+.input:focus {
+  background-color: #64646414;
+  border-color: #48484899;
+}
+
+.input-md {
+  width: 590px;
+}
+
+.input-lg {
+  width: 646px;
+  height: 48px;
+}
+
+.slider-button {
+  flex-shrink: 0;
+  background-color: #eeeeee;
+  width: 48px;
+  height: 48px;
+  border-radius: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: -55px;
+}
+
+.order-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  width: max-content;
+
+  font-family: "Roboto", sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  border: 1px solid #414141;
+  border-radius: 8px;
+  color: #484848;
+  background-color: #f3f2f2;
+  margin-bottom: 16px;
+}

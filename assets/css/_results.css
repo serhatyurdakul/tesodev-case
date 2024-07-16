@@ -1,0 +1,141 @@
+.search-results-home {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 718px;
+
+  flex-shrink: 0;
+  border-radius: 24px;
+  border: 1px solid #484848;
+  margin-bottom: 94px;
+}
+
+.results {
+  margin-bottom: 36px;
+}
+
+.all-results-wrapper {
+  display: flex;
+  gap: 20px;
+  height: 500px;
+  margin-bottom: 150px;
+  margin-left: 150px;
+}
+
+.results-list {
+  width: 726px;
+  margin-top: 35px;
+}
+
+.results-item {
+  height: 78px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  padding: 20px 24px;
+  margin-bottom: 24px;
+  transition: 0.2s ease all;
+  cursor: pointer;
+}
+
+.results-item:last-child {
+  margin-bottom: 0;
+}
+
+.results-item:hover {
+  border-radius: 8px;
+  background-color: #4f75c236;
+}
+
+.results-item:not(:last-child)::after {
+  position: absolute;
+  content: "";
+  background-color: #7e7e7e;
+  width: 690px;
+  height: 1px;
+  bottom: -12px;
+  left: 15px;
+}
+
+.search-results-home .results-item {
+  padding: 10px 24px;
+}
+
+.search-results-home .results-list {
+  width: 666px;
+  margin-top: 35px;
+}
+
+.search-results-home .results-item {
+  height: 63px;
+}
+
+.search-results-home .results-item:not(:last-child)::after {
+  width: 575px;
+  height: 1px;
+  bottom: -12px;
+  left: 70px;
+  background-color: #f2f4f5;
+}
+
+.results-item p:not(:last-child) {
+  margin-bottom: 4px;
+}
+
+.location-info-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.location-info-wrapper img {
+  margin-right: 12px;
+}
+
+.user-info-wrapper .user-info {
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+  color: #484848;
+  font-weight: 400;
+  line-height: 20px;
+}
+
+.user-info-wrapper .date-info {
+  color: #484848;
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 16px;
+  text-align: right;
+}
+
+/*! order-by button start  */
+.orderby-list {
+  width: max-content;
+  padding: 10px 8px;
+  border-radius: 8px;
+  border: 1px solid #8f8f8f;
+  background: #fff;
+  box-shadow: 4px 6px 12px 4px rgba(0, 0, 0, 0.2);
+}
+
+.orderby-item a {
+  display: block;
+  padding: 6px 9px;
+  font-family: "Roboto", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 24px;
+  color: #000;
+  transition: 0.1s ease all;
+  flex-shrink: 0;
+}
+
+.orderby-item a:hover {
+  background-color: #b3b3b3;
+  color: #fff;
+  border-radius: 8px;
+}
+/*! order-by button end  */
