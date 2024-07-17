@@ -1,7 +1,5 @@
 const searchInput = document.querySelector(".searchInput-resultspage");
-
 const resultsList = document.querySelector(".results-list");
-
 const searchButton = document.querySelector(".btn-searchbar");
 
 // Verileri Local Storage'dan çekme
@@ -31,20 +29,31 @@ document.show = show;
 // Pagination işlemi
 let currentPage = 1;
 let totalPages;
+
 function setupPagination(results, resultsPerPage) {
   const paginationContainer = document.querySelector(".pagination-container");
   totalPages = Math.ceil(results.length / resultsPerPage);
 
   if (totalPages > 1) {
     let paginationHTML = '<ul class="pagination">';
-    paginationHTML +=
-      '<li class="page-item previous"><a href="#" class="page-link" data-page="previous">Previous</a></li>';
-    for (let i = 1; i <= totalPages; i++) {
-      paginationHTML += `<li class="page-item"><a href="#" class="page-link" data-page="${i}">${i}</a></li>`;
-    }
-    paginationHTML +=
-      '<li class="page-item next"><a href="#" class="page-link" data-page="next">Next</a></li>';
+    paginationHTML += '<li class="page-item previous"><a href="#" class="page-link" data-page="previous">Previous</a></li>';
 
+    if (totalPages <= 6) {
+      for (let i = 1; i <= totalPages; i++) {
+        paginationHTML += `<li class="page-item"><a href="#" class="page-link" data-page="${i}">${i}</a></li>`;
+      }
+    } else {
+      const visiblePages = getVisiblePages(currentPage, totalPages);
+      for (let i = 1; i <= totalPages; i++) {
+        if (visiblePages.includes(i)) {
+          paginationHTML += `<li class="page-item"><a href="#" class="page-link" data-page="${i}">${i}</a></li>`;
+        } else if (i === visiblePages[visiblePages.length - 1] - 1 || i === visiblePages[0] + 1) {
+          paginationHTML += '<li class="page-item ellipsis"><span class="page-link">...</span></li>';
+        }
+      }
+    }
+
+    paginationHTML += '<li class="page-item next"><a href="#" class="page-link" data-page="next">Next</a></li>';
     paginationHTML += "</ul>";
     paginationContainer.innerHTML = paginationHTML;
 
@@ -55,24 +64,39 @@ function setupPagination(results, resultsPerPage) {
         e.preventDefault();
         const pageValue = link.getAttribute("data-page");
         if (pageValue === "previous") {
-          // "Önceki" butonuna tıklama işlemini ele alma
-          currentPage = Math.max(currentPage - 1, 1); // İlk sayfanın altına gitmeyi engelle
+          currentPage = Math.max(currentPage - 1, 1);
         } else if (pageValue === "next") {
-          // "Sonraki" butonuna tıklama işlemini ele al
-          currentPage = Math.min(currentPage + 1, totalPages); // Son sayfayı aşmayı engelle
+          currentPage = Math.min(currentPage + 1, totalPages);
         } else {
-          const page = parseInt(pageValue);
-          currentPage = page;
+          currentPage = parseInt(pageValue);
         }
         displayResults(results, resultsPerPage, currentPage);
+        setupPagination(results, resultsPerPage);
       });
     });
 
-    // İlk sayfayı varsayılan olarak göster
-    displayResults(results, resultsPerPage, 1);
+    displayResults(results, resultsPerPage, currentPage);
   } else {
     paginationContainer.innerHTML = "";
+    displayResults(results, resultsPerPage, 1);
   }
+}
+
+function getVisiblePages(currentPage, totalPages) {
+  if (totalPages <= 6) return [...Array(totalPages)].map((_, i) => i + 1);
+  
+  let pages = [1, totalPages];
+  let middlePages = [];
+
+  if (currentPage <= 3) {
+    middlePages = [2, 3, 4];
+  } else if (currentPage >= totalPages - 2) {
+    middlePages = [totalPages - 3, totalPages - 2, totalPages - 1];
+  } else {
+    middlePages = [currentPage - 1, currentPage, currentPage + 1];
+  }
+
+  return [...new Set([...pages, ...middlePages])].sort((a, b) => a - b);
 }
 
 // Sayfada sonuçları gösterme işlemi
@@ -115,16 +139,12 @@ function displayResults(results, resultsPerPage, currentPage) {
   const pageLinks = document.querySelectorAll(".page-link");
 
   // Tüm sayfa-link öğelerini döngü ile geçerek stilini güncelleme
-  pageLinks.forEach((link, index) => {
-    if (index === currentPage) {
-      link.style.background = "#204080";
-      link.style.color = "#fff";
-      link.style.border = "none";
+  pageLinks.forEach((link) => {
+    const pageNum = parseInt(link.getAttribute("data-page"));
+    if (pageNum === currentPage) {
+      link.parentElement.classList.add("active");
     } else {
-      // Diğer sayfa linkleri için stil sıfırlama
-      link.style.background = "";
-      link.style.color = "";
-      link.style.border = "";
+      link.parentElement.classList.remove("active");
     }
   });
 
@@ -143,114 +163,38 @@ function displayResults(results, resultsPerPage, currentPage) {
 
 // Arama işlevi
 function search(text = null) {
-  // Arama metnini küçük harfe dönüştürme
   const searchText = text ?? searchInput.value.trim().toLowerCase();
 
   let filteredResults = combinedData.filter((item) =>
     item.nameSurname.toLowerCase().includes(searchText)
   );
 
-  // En az iki karakter girildiğini kontrol etme
   if (searchText.length < 2) {
-    // Eğer iki karakterden azsa, "results-list" içeriğini temizliyoruz
     resultsList.innerHTML = "";
-
+    document.querySelector(".pagination-container").innerHTML = "";
     return;
   }
 
-  // "results-list" içeriğini temizleme
-  resultsList.innerHTML = "";
-
-  // Eşleşen sonuç sayacını tanımlama
-
-  let array = [];
-
-  // Local Storage'dan çekilen verileri döngü ile işleme
-  combinedData.forEach((item) => {
-    if (item.nameSurname.toLowerCase().includes(searchText)) {
-      array.push(item);
-    }
-  });
+  let array = filteredResults;
 
   // arrayi sort et
   if (sortKey?.key) {
     if (sortKey.key == "name" && sortKey.sort == "asc") {
-      array = filteredResults.sort(function (a, b) {
-        var nameA = a.nameSurname.toUpperCase(); // Büyük/küçük harf duyarlı olmayan sıralama
-        var nameB = b.nameSurname.toUpperCase();
-        if (nameA < nameB) {
-          return -1;
-        }
-        if (nameA > nameB) {
-          return 1;
-        }
-        return 0;
-      });
+      array = array.sort((a, b) => a.nameSurname.localeCompare(b.nameSurname));
     }
-
     if (sortKey.key == "name" && sortKey.sort == "desc") {
-      array = filteredResults.sort(function (a, b) {
-        var nameA = a.nameSurname.toUpperCase();
-        var nameB = b.nameSurname.toUpperCase();
-        if (nameA > nameB) {
-          return -1;
-        }
-        if (nameA < nameB) {
-          return 1;
-        }
-        return 0;
-      });
+      array = array.sort((a, b) => b.nameSurname.localeCompare(a.nameSurname));
     }
     if (sortKey.key == "year" && sortKey.sort == "asc") {
-      array = filteredResults.sort(function (a, b) {
-        var dateA = new Date(a.date);
-        var dateB = new Date(b.date);
-        return dateA - dateB;
-      });
+      array = array.sort((a, b) => new Date(a.date) - new Date(b.date));
     }
     if (sortKey.key == "year" && sortKey.sort == "desc") {
-      array = filteredResults.sort(function (a, b) {
-        var dateA = new Date(a.date);
-        var dateB = new Date(b.date);
-        return dateB - dateA;
-      });
+      array = array.sort((a, b) => new Date(b.date) - new Date(a.date));
     }
   }
 
-  //aramaya bastır
-
-  array.forEach((item) => {
-    const listItem = document.createElement("li");
-    listItem.className = "results-item";
-
-    // İçeriği doldurma
-    listItem.innerHTML = `
-        <div class="location-info">
-          <div class="location-info-wrapper">
-            <img src="./assets/icon/location-icon.svg" alt="location icon" />
-            <div class="location-wrapper">
-              <p class="company location-bold-text">${
-                item.company ?? "Company"
-              }</p>
-              <p class="location location-light-text">
-                <span class="city">${item.city},</span>
-                <span class="country">${item.country}</span>
-              </p>
-            </div>
-          </div>
-        </div>
-        <div class="user-info-wrapper">
-          <p class="user-info">${item.nameSurname}</p>
-          <p class="date-info">${item.date ?? "10/25/2023"}</p>
-        </div>
-      `;
-
-    // Oluşturduğumuz li öğesini "results-list" ul elementine ekleme
-    resultsList.appendChild(listItem);
-  });
-
-  // Sayfa başına sonuçları görüntüleme işlemini çağırma
-  setupPagination(filteredResults, 5); //  sayfa başına 5 sonuç
+  currentPage = 1; // Yeni arama yapıldığında ilk sayfaya dön
+  setupPagination(array, 5); // sayfa başına 5 sonuç
 }
 
 // Arama işlemini dinleme

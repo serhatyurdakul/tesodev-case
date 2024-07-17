@@ -63,3 +63,14 @@
   background-color: transparent;
   color: #8f8f8f;
 }
+
+/* ellipsis */
+.page-item.ellipsis .page-link {
+  border: none;
+  background-color: transparent;
+  pointer-events: none;
+}
+
+.page-item.hidden {
+  display: none;
+}
