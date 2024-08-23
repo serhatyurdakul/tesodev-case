@@ -18,15 +18,7 @@
 .slider .news-card img {
   margin-bottom: 12px;
 }
+
 .slider .news-card .subheading {
   margin-bottom: 8px;
-}
-
-.news-info {
-  color: #6c7072;
-  font-family: "Inter", sans-serif;
-  font-size: 12px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 16px;
 }

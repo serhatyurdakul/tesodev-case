@@ -1,216 +1,147 @@
-const searchInput = document.querySelector(".searchInput-resultspage");
-const resultsList = document.querySelector(".results-list");
-const searchButton = document.querySelector(".btn-searchbar");
+import {
+  getDataFromLocalStorage,
+  performSearch,
+  displaySearchResults,
+  getSearchQueryFromURL,
+  setSearchQueryInURL,
+  saveSearchResults,
+  getLastSearchResults,
+} from "./search.js";
+import { setupPagination } from "./pagination.js";
 
-// Verileri Local Storage'dan çekme
-const combinedDataString = localStorage.getItem("combinedData");
-const combinedData = JSON.parse(combinedDataString);
-let sortKey;
+document.addEventListener("DOMContentLoaded", function () {
+  const searchInput = document.querySelector(".searchInput-resultspage");
+  const resultsList = document.querySelector(".results-list");
+  const searchButton = document.querySelector(".btn-searchbar");
+  const addNewRecordButton = document.querySelector(".btn-add-new-record");
+  const sortBtn = document.querySelector(".orderby-list");
 
-const sortBtn = document.querySelector(".orderby-list");
+  const combinedData = getDataFromLocalStorage();
+  let sortKey;
+  let currentPage = 1;
 
-/* sort  */
-function setSortKey(key, sort, self) {
-  sortKey = {
-    key,
-    sort,
-  };
-  search();
-  self.classList.add("selected");
-}
-document.setSortKey = setSortKey;
+  function setSortKey(key, sort, self) {
+    sortKey = { key, sort };
+    search(searchInput.value);
+    document
+      .querySelectorAll(".orderby-item a")
+      .forEach((item) => item.classList.remove("selected"));
+    self.classList.add("selected");
+  }
 
-function show() {
-  sortBtn.style.display = sortBtn.style.display == "none" ? "block" : "none";
-}
+  function show() {
+    sortBtn.style.display = sortBtn.style.display === "none" ? "block" : "none";
+  }
 
-document.show = show;
+  function displayResults(results, resultsPerPage, currentPage) {
+    const start = (currentPage - 1) * resultsPerPage;
+    const end = start + resultsPerPage;
+    const paginatedResults = results.slice(start, end);
 
-// Pagination işlemi
-let currentPage = 1;
-let totalPages;
+    displaySearchResults(paginatedResults, resultsList);
+  }
 
-function setupPagination(results, resultsPerPage) {
-  const paginationContainer = document.querySelector(".pagination-container");
-  totalPages = Math.ceil(results.length / resultsPerPage);
+  function search(searchText) {
+    searchText = searchText.trim().toLowerCase();
 
-  if (totalPages > 1) {
-    let paginationHTML = '<ul class="pagination">';
-    paginationHTML += '<li class="page-item previous"><a href="#" class="page-link" data-page="previous">Previous</a></li>';
-
-    if (totalPages <= 6) {
-      for (let i = 1; i <= totalPages; i++) {
-        paginationHTML += `<li class="page-item"><a href="#" class="page-link" data-page="${i}">${i}</a></li>`;
-      }
-    } else {
-      const visiblePages = getVisiblePages(currentPage, totalPages);
-      for (let i = 1; i <= totalPages; i++) {
-        if (visiblePages.includes(i)) {
-          paginationHTML += `<li class="page-item"><a href="#" class="page-link" data-page="${i}">${i}</a></li>`;
-        } else if (i === visiblePages[visiblePages.length - 1] - 1 || i === visiblePages[0] + 1) {
-          paginationHTML += '<li class="page-item ellipsis"><span class="page-link">...</span></li>';
-        }
+    if (searchText.length < 2 || searchText === "undefined") {
+      const lastResults = getLastSearchResults();
+      const lastQuery = localStorage.getItem("lastSearchQuery");
+      if (lastResults && lastQuery && lastQuery !== "undefined") {
+        searchInput.value = lastQuery;
+        displayResults(lastResults, 5, 1);
+        setupPagination(lastResults, 5, 1, displayResults);
+        setSearchQueryInURL(lastQuery);
+        return;
+      } else {
+        resultsList.innerHTML = "";
+        document.querySelector(".pagination-container").innerHTML = "";
+        setSearchQueryInURL("");
+        return;
       }
     }
 
-    paginationHTML += '<li class="page-item next"><a href="#" class="page-link" data-page="next">Next</a></li>';
-    paginationHTML += "</ul>";
-    paginationContainer.innerHTML = paginationHTML;
+    let results = performSearch(searchText, combinedData);
 
-    // Sayfa numaralarını dinleme
-    const pageLinks = document.querySelectorAll(".page-link");
-    pageLinks.forEach((link) => {
-      link.addEventListener("click", (e) => {
-        e.preventDefault();
-        const pageValue = link.getAttribute("data-page");
-        if (pageValue === "previous") {
-          currentPage = Math.max(currentPage - 1, 1);
-        } else if (pageValue === "next") {
-          currentPage = Math.min(currentPage + 1, totalPages);
-        } else {
-          currentPage = parseInt(pageValue);
-        }
-        displayResults(results, resultsPerPage, currentPage);
-        setupPagination(results, resultsPerPage);
+    if (sortKey?.key) {
+      results = sortResults(results);
+    }
+
+    setSearchQueryInURL(searchText);
+    saveSearchResults(results, searchText);
+    searchInput.value = searchText;
+
+    currentPage = 1;
+    setupPagination(results, 5, currentPage, displayResults);
+  }
+
+  function sortResults(results) {
+    if (sortKey.key === "name") {
+      return results.sort((a, b) => {
+        return sortKey.sort === "asc"
+          ? a.nameSurname.localeCompare(b.nameSurname)
+          : b.nameSurname.localeCompare(a.nameSurname);
       });
-    });
-
-    displayResults(results, resultsPerPage, currentPage);
-  } else {
-    paginationContainer.innerHTML = "";
-    displayResults(results, resultsPerPage, 1);
-  }
-}
-
-function getVisiblePages(currentPage, totalPages) {
-  if (totalPages <= 6) return [...Array(totalPages)].map((_, i) => i + 1);
-  
-  let pages = [1, totalPages];
-  let middlePages = [];
-
-  if (currentPage <= 3) {
-    middlePages = [2, 3, 4];
-  } else if (currentPage >= totalPages - 2) {
-    middlePages = [totalPages - 3, totalPages - 2, totalPages - 1];
-  } else {
-    middlePages = [currentPage - 1, currentPage, currentPage + 1];
+    } else if (sortKey.key === "year") {
+      return results.sort((a, b) => {
+        return sortKey.sort === "asc"
+          ? new Date(a.date) - new Date(b.date)
+          : new Date(b.date) - new Date(a.date);
+      });
+    }
+    return results;
   }
 
-  return [...new Set([...pages, ...middlePages])].sort((a, b) => a - b);
-}
-
-// Sayfada sonuçları gösterme işlemi
-function displayResults(results, resultsPerPage, currentPage) {
-  const start = (currentPage - 1) * resultsPerPage;
-  const end = start + resultsPerPage;
-  const paginatedResults = results.slice(start, end);
-
-  resultsList.innerHTML = "";
-
-  paginatedResults.forEach((item) => {
-    // Sonuçları görüntüleme
-    const listItem = document.createElement("li");
-    listItem.className = "results-item";
-    listItem.innerHTML = `
-      <div class="location-info">
-        <div class="location-info-wrapper">
-          <img src="./assets/icon/location-icon.svg" alt="location icon" />
-          <div class="location-wrapper">
-            <p class="company location-bold-text">${
-              item.company ?? "Company"
-            }</p>
-            <p class="location location-light-text">
-              <span class="city">${item.city},</span>
-              <span class="country">${item.country}</span>
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="user-info-wrapper">
-        <p class="user-info">${item.nameSurname}</p>
-        <p class="date-info">${item.date ?? "10/25/2023"}</p>
-      </div>
-    `;
-
-    resultsList.appendChild(listItem);
-  });
-
-  // Tüm "page-link" öğelerini al
-  const pageLinks = document.querySelectorAll(".page-link");
-
-  // Tüm sayfa-link öğelerini döngü ile geçerek stilini güncelleme
-  pageLinks.forEach((link) => {
-    const pageNum = parseInt(link.getAttribute("data-page"));
-    if (pageNum === currentPage) {
-      link.parentElement.classList.add("active");
+  function initSearch() {
+    const urlQuery = getSearchQueryFromURL();
+    if (urlQuery && urlQuery !== "undefined") {
+      searchInput.value = urlQuery;
+      search(urlQuery);
     } else {
-      link.parentElement.classList.remove("active");
-    }
-  });
-
-  // İlk sayfada "previous" butonunu devre dışı bırakma
-  const previousButton = document.querySelector(".page-item.previous");
-  if (previousButton) {
-    previousButton.classList.toggle("disabled", currentPage === 1);
-  }
-
-  // Son sayfada "next" butonunu devre dışı bırakma
-  const nextButton = document.querySelector(".page-item.next");
-  if (nextButton) {
-    nextButton.classList.toggle("disabled", currentPage === totalPages);
-  }
-}
-
-// Arama işlevi
-function search(text = null) {
-  const searchText = text ?? searchInput.value.trim().toLowerCase();
-
-  let filteredResults = combinedData.filter((item) =>
-    item.nameSurname.toLowerCase().includes(searchText)
-  );
-
-  if (searchText.length < 2) {
-    resultsList.innerHTML = "";
-    document.querySelector(".pagination-container").innerHTML = "";
-    return;
-  }
-
-  let array = filteredResults;
-
-  // arrayi sort et
-  if (sortKey?.key) {
-    if (sortKey.key == "name" && sortKey.sort == "asc") {
-      array = array.sort((a, b) => a.nameSurname.localeCompare(b.nameSurname));
-    }
-    if (sortKey.key == "name" && sortKey.sort == "desc") {
-      array = array.sort((a, b) => b.nameSurname.localeCompare(a.nameSurname));
-    }
-    if (sortKey.key == "year" && sortKey.sort == "asc") {
-      array = array.sort((a, b) => new Date(a.date) - new Date(b.date));
-    }
-    if (sortKey.key == "year" && sortKey.sort == "desc") {
-      array = array.sort((a, b) => new Date(b.date) - new Date(a.date));
+      const lastResults = getLastSearchResults();
+      const lastQuery = localStorage.getItem("lastSearchQuery");
+      if (lastResults && lastQuery && lastQuery !== "undefined") {
+        searchInput.value = lastQuery;
+        displayResults(lastResults, 5, 1);
+        setupPagination(lastResults, 5, 1, displayResults);
+        setSearchQueryInURL(lastQuery);
+      }
     }
   }
 
-  currentPage = 1; // Yeni arama yapıldığında ilk sayfaya dön
-  setupPagination(array, 5); // sayfa başına 5 sonuç
-}
+  // Event listeners
+  if (searchInput) {
+    searchInput.addEventListener("input", (e) => {
+      search(e.target.value);
+    });
+  }
 
-// Arama işlemini dinleme
-searchInput.addEventListener("input", () => {
-  search();
+  if (searchButton) {
+    searchButton.addEventListener("click", () => {
+      search(searchInput.value);
+    });
+  }
+
+  if (addNewRecordButton) {
+    addNewRecordButton.addEventListener("click", (e) => {
+      const currentSearch = searchInput.value;
+      if (currentSearch && currentSearch !== "undefined") {
+        window.location.href = `./form.html?s=${encodeURIComponent(
+          currentSearch
+        )}`;
+      } else {
+        window.location.href = "./form.html";
+      }
+    });
+  }
+
+  // Başlatma
+  initSearch();
+
+  // Fonksiyonları global kapsama ekleme
+  window.setSortKey = setSortKey;
+  window.show = show;
+  window.searchbtnclick = () => search(searchInput.value);
 });
 
-const query = document.location.search?.split("?s=")?.[1];
-if (query) {
-  searchInput.value = query;
-  search(query);
-}
-
-function searchbtnclick() {
-  document.location.href =
-    "./results.html?s=" + searchInput.value.trim().toLowerCase();
-}
-
-window.searchbtnclick = searchbtnclick;
+window.search = search;

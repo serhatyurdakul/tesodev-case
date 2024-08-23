@@ -4,24 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./assets/css/main.css" />
-    <script src="./assets/js/form.js"></script>
+    <script defer src="./assets/js/header.js"></script>
+    <script defer src="./assets/js/form.js"></script>
     <title>Form</title>
   </head>
   <body>
     <!--! header start  -->
-    <header class="form-header">
-      <div class="container">
-        <div class="form-header-wrapper">
-          <a href="./"> <img src="./assets/icon/logo-sm.svg" alt="logo" /></a>
-          <div class="return-text">
-            <a href="./results.html" class="return-wrapper">
-              <img src="./assets/icon/arrow-back.svg" alt="" />
-              <p class="return-title">Return to List Page</p>
-            </a>
-          </div>
-        </div>
-      </div>
-    </header>
+    <div id="header-placeholder"></div>
     <!--! header end  -->
 
     <!--! form section start  -->
@@ -30,14 +19,14 @@
         <div class="form-wrapper">
           <form action="#">
             <div class="form-item">
-              <label for="">Name Surname</label>
+              <label for="nameSurname">Name Surname</label>
               <input
                 autofocus
                 type="text"
                 name="nameSurname"
                 class="input input-md"
                 placeholder="Enter name and surname"
-                id=""
+                id="nameSurname"
               />
             </div>
             <div class="form-item">
