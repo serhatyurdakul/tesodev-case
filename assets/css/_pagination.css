@@ -64,6 +64,7 @@
   color: #8f8f8f;
 }
 
+/* ellipsis */
 .page-item.ellipsis .page-link {
   border: none;
   background-color: transparent;

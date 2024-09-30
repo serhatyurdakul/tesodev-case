@@ -4,19 +4,19 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <script defer src="./assets/js/db.js"></script>
     <script defer src="./assets/js/header.js"></script>
-    <script defer type="module" src="./assets/js/results.js"></script>
+    <script defer src="./assets/js/search.js"></script>
+    <script defer src="./assets/js/db.js"></script>
+    <script defer src="./assets/js/pagination.js"></script>
+    <script defer src="./assets/js/results.js"></script>
 
     <link rel="stylesheet" href="./assets/css/main.css" />
     <title>Results</title>
   </head>
 
   <body>
-    <!--! header start  -->
-    <div id="header-placeholder"></div>
-    <!--! header end  -->
-
+    <header id="header-placeholder"></header>
+    
     <!--! all-results start  -->
     <section class="results">
       <div class="container">
@@ -26,7 +26,8 @@
           <!--! orderby select start -->
           <div class="orderby-wrapper">
             <button class="order-btn" onclick="show(self)">
-              <img src="./assets/icon/sort-icon.svg" alt="sort icon" />Order By
+              <img src="./assets/icon/sort-icon.svg" alt="order button" />Order
+              By
             </button>
             <ul class="orderby-list" style="display: none">
               <li class="orderby-item" onclick="setSortKey('name','asc',this)">
@@ -46,13 +47,13 @@
           <!--! orderby button end -->
         </div>
 
-        <!-- pagination start -->
+        <!-- pag start -->
         <div class="pagination-container">
           <ul class="pagination">
             <!-- Sayfa numaraları  -->
           </ul>
         </div>
-        <!-- pagination end -->
+        <!-- pag end -->
       </div>
     </section>
 

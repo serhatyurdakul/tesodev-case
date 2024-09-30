@@ -81,14 +81,60 @@ document.addEventListener("DOMContentLoaded", () => {
     return true;
   }
 
+
+
   // Form submit olayını dinleme
   form.addEventListener("submit", async function (e) {
-    e.preventDefault();
+    e.preventDefault(); 
     e.stopPropagation();
 
     if (!validateForm()) {
       return;
     }
+
+
+    
+    /* 
+
+    //  Url Shortener API 
+
+    let url;
+
+    const websiteURL = websiteInput.value.trim();
+
+    if (websiteURL) {
+      // Website URL'sini API ile sıkıştırmak için kullanılacak URL
+      const apiURL = `https://ulvis.net/API/write/get?url=${websiteURL}&private=1`;
+
+      try {
+        // API'yi çağırma ve sıkıştırılmış URL'yi alma
+        const response = await fetch(apiURL, { mode: "no-cors" });
+        console.log(response);
+        if (response.status >= 200 && response.status < 300) {
+          const data = await response.json();
+          url = data.url;
+
+     
+
+          // Formu gönder
+        } else {
+          alert(
+            "Website URL sıkıştırma başarısız oldu. Lütfen geçerli bir URL girdiğinizden emin olun."
+          );
+          return;
+        }
+      } catch (error) {
+        console.error("API hatası:", error);
+        alert(
+          "URL sıkıştırma sırasında bir hata oluştu. Lütfen tekrar deneyin."
+        );
+        return;
+      }
+    } else {
+      alert("Website URL boş olamaz. Lütfen geçerli bir URL girin.");
+      return;
+    } */
+
 
     // Alınan verileri bir nesne olarak saklama
     const formData = {
@@ -98,6 +144,9 @@ document.addEventListener("DOMContentLoaded", () => {
       email: emailInput.value,
       website: websiteInput.value,
     };
+
+    // Alınan verileri kullanmak veya göndermek için formData nesnesi kullanılabilir
+    /* console.log(formData); */
 
     let storage = JSON.parse(localStorage.getItem("combinedData"));
 
@@ -110,28 +159,7 @@ document.addEventListener("DOMContentLoaded", () => {
     cityInput.classList.remove("error");
     emailInput.classList.remove("error");
     websiteInput.classList.remove("error");
-    // Formu temizle
+    // Formu temizle 
     form.reset();
   });
-
-  // Return to List bağlantısını işleme
-  const returnToListLink = document.getElementById("returnToListLink");
-
-  if (returnToListLink) {
-    returnToListLink.addEventListener("click", (e) => {
-      e.preventDefault();
-      let currentSearch = new URLSearchParams(window.location.search).get("s");
-
-      // Eğer URL'de sorgu yoksa, localStorage'dan almayı dene
-      if (!currentSearch) {
-        currentSearch = localStorage.getItem("lastSearchQuery");
-      }
-
-      if (currentSearch && currentSearch !== "undefined") {
-        window.location.href = `./results.html?s=${currentSearch}`;
-      } else {
-        window.location.href = "./results.html";
-      }
-    });
-  }
 });
