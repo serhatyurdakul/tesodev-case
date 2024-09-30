@@ -131,6 +131,5 @@ function updatePaginationUI() {
   }
 }
 
-// Global scope'a açıyoruz
 window.setupPagination = setupPagination;
 window.displayResults = displayResults;

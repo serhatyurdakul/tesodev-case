@@ -34,6 +34,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     currentPage = 1;
     setupPagination(results, 5);
+
+    // Aramayı localStorage'a kaydet
+    localStorage.setItem("lastSearch", searchText);
   }
 
   function sortResults(results, sortKey) {
@@ -58,13 +61,28 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   searchButton.addEventListener("click", () => {
-    search();
+    const searchText = searchInput.value;
+    search(searchText);
+    updateURL(searchText);
   });
+
+  function updateURL(searchText) {
+    const newURL = new URL(window.location);
+    newURL.searchParams.set("s", searchText);
+    window.history.pushState({}, '', newURL);
+  }
 
   const query = new URLSearchParams(window.location.search).get("s");
   if (query) {
     searchInput.value = query;
     search(query);
+  } else {
+    // Eğer URL'de arama sorgusu yoksa, son aramayı localStorage'dan al
+    const lastSearch = localStorage.getItem("lastSearch");
+    if (lastSearch) {
+      searchInput.value = lastSearch;
+      search(lastSearch);
+    }
   }
 
   window.searchbtnclick = search;

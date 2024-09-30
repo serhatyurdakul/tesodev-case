@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
       headerContent = `
         <header class="mainpage-header">
           <div class="container">
-            <a href="./form.html"><button class="btn btn-lg">Add new record</button></a>
+            <a href="./form.html" onclick="clearLastSearch()"><button class="btn btn-lg">Add new record</button></a>
           </div>
         </header>
       `;
@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="form-header-wrapper">
               <a href="./"> <img src="./assets/icon/logo-sm.svg" alt="logo" /></a>
               <div class="return-text">
-                <a href="./results.html" class="return-wrapper">
+                <a href="./results.html" class="return-wrapper" id="returnToListPage">
                   <img src="./assets/icon/arrow-back.svg" alt="" />
                   <p class="return-title">Return to List Page</p>
                 </a>
@@ -57,4 +57,21 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   headerPlaceholder.innerHTML = headerContent;
+
+  // Form sayfasında "Return to List Page" butonuna tıklandığında
+  if (currentPage === 'form.html') {
+    document.getElementById('returnToListPage').addEventListener('click', function(e) {
+      e.preventDefault();
+      const lastSearch = localStorage.getItem("lastSearch");
+      if (lastSearch) {
+        window.location.href = `./results.html?s=${encodeURIComponent(lastSearch)}`;
+      } else {
+        window.location.href = './results.html';
+      }
+    });
+  }
 });
+
+window.clearLastSearch = function() {
+  localStorage.removeItem("lastSearch");
+};

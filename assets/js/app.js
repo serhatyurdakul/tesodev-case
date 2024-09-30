@@ -24,3 +24,7 @@ searchInput.addEventListener("input", () => {
     searchButton.style.visibility = "hidden";
   }
 });
+
+function clearLastSearch() {
+  localStorage.removeItem("lastSearch");
+}

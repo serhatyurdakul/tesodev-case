@@ -159,7 +159,6 @@ document.addEventListener("DOMContentLoaded", () => {
     cityInput.classList.remove("error");
     emailInput.classList.remove("error");
     websiteInput.classList.remove("error");
-    // Formu temizle 
     form.reset();
   });
 });
